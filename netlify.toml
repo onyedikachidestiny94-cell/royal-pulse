@@ -1,0 +1,9 @@
+[build]
+  base = "."
+  command = "pnpm run typecheck:libs && pnpm --filter @workspace/royal-pulse run build"
+  publish = "artifacts/royal-pulse/dist/public"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
