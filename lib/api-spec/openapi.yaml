@@ -3,13 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Royal Pulse News API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: articles
+    description: News article operations
+  - name: categories
+    description: Category operations
+  - name: comments
+    description: Comment operations
+  - name: newsletter
+    description: Newsletter subscription
+  - name: tips
+    description: News tips
+  - name: search
+    description: Search operations
+  - name: upload
+    description: File upload
 paths:
   /healthz:
     get:
@@ -24,6 +38,388 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /articles:
+    get:
+      operationId: listArticles
+      tags: [articles]
+      summary: List published articles
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+      responses:
+        "200":
+          description: Articles list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticlesPage"
+    post:
+      operationId: createArticle
+      tags: [articles]
+      summary: Create a new article (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+
+  /articles/featured:
+    get:
+      operationId: getFeaturedArticles
+      tags: [articles]
+      summary: Get featured articles for homepage hero
+      responses:
+        "200":
+          description: Featured articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+
+  /articles/breaking:
+    get:
+      operationId: getBreakingNews
+      tags: [articles]
+      summary: Get breaking news articles
+      responses:
+        "200":
+          description: Breaking news articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+
+  /articles/trending:
+    get:
+      operationId: getTrendingArticles
+      tags: [articles]
+      summary: Get trending articles sorted by views
+      responses:
+        "200":
+          description: Trending articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+
+  /articles/popular:
+    get:
+      operationId: getPopularArticles
+      tags: [articles]
+      summary: Get popular articles (most viewed, last 7 days)
+      responses:
+        "200":
+          description: Popular articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+
+  /articles/stats:
+    get:
+      operationId: getArticleStats
+      tags: [articles]
+      summary: Get article stats summary (admin dashboard)
+      responses:
+        "200":
+          description: Stats summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleStats"
+
+  /articles/{slug}:
+    get:
+      operationId: getArticleBySlug
+      tags: [articles]
+      summary: Get a single article by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Article detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleDetail"
+        "404":
+          description: Not found
+
+  /articles/{id}/view:
+    post:
+      operationId: incrementArticleView
+      tags: [articles]
+      summary: Increment article view count
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: View count updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewCount"
+
+  /admin/articles:
+    get:
+      operationId: listAdminArticles
+      tags: [articles]
+      summary: List all articles including drafts (admin)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [published, draft, all]
+            default: all
+      responses:
+        "200":
+          description: Admin articles list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticlesPage"
+
+  /admin/articles/{id}:
+    put:
+      operationId: updateArticle
+      tags: [articles]
+      summary: Update an article (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteArticle
+      tags: [articles]
+      summary: Delete an article (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResult"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories with article counts
+      responses:
+        "200":
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /articles/{articleId}/comments:
+    get:
+      operationId: listComments
+      tags: [comments]
+      summary: Get approved comments for an article
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Comments list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+    post:
+      operationId: createComment
+      tags: [comments]
+      summary: Add a comment to an article
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentInput"
+      responses:
+        "201":
+          description: Comment submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterInput"
+      responses:
+        "201":
+          description: Subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscribeResult"
+
+  /tips:
+    post:
+      operationId: submitTip
+      tags: [tips]
+      summary: Submit a news tip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TipInput"
+      responses:
+        "201":
+          description: Tip submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TipResult"
+
+  /search:
+    get:
+      operationId: searchArticles
+      tags: [search]
+      summary: Search articles by keyword
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticlesPage"
+
+  /upload:
+    post:
+      operationId: uploadImage
+      tags: [upload]
+      summary: Register an image URL (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadInput"
+      responses:
+        "200":
+          description: Upload successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResult"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +430,357 @@ components:
       required:
         - status
 
+    Article:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - excerpt
+        - category
+        - author
+        - imageUrl
+        - publishedAt
+        - views
+        - status
+        - isFeatured
+        - isBreaking
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        excerpt:
+          type: string
+        category:
+          type: string
+        author:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        publishedAt:
+          type: string
+          format: date-time
+        views:
+          type: integer
+        status:
+          type: string
+          enum: [draft, published]
+        isFeatured:
+          type: boolean
+        isBreaking:
+          type: boolean
+        readTime:
+          type: ["integer", "null"]
+
+    ArticleDetail:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - excerpt
+        - category
+        - author
+        - imageUrl
+        - publishedAt
+        - views
+        - status
+        - isFeatured
+        - isBreaking
+        - related
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        category:
+          type: string
+        author:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        publishedAt:
+          type: string
+          format: date-time
+        views:
+          type: integer
+        status:
+          type: string
+          enum: [draft, published]
+        isFeatured:
+          type: boolean
+        isBreaking:
+          type: boolean
+        readTime:
+          type: ["integer", "null"]
+        related:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
+
+    ArticlesPage:
+      type: object
+      required:
+        - articles
+        - total
+        - page
+        - totalPages
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
+        total:
+          type: integer
+        page:
+          type: integer
+        totalPages:
+          type: integer
+
+    ArticleInput:
+      type: object
+      required:
+        - title
+        - content
+        - excerpt
+        - category
+        - author
+      properties:
+        title:
+          type: string
+          minLength: 1
+        content:
+          type: string
+          minLength: 1
+        excerpt:
+          type: string
+          minLength: 1
+        category:
+          type: string
+        author:
+          type: string
+        imageUrl:
+          type: string
+        status:
+          type: string
+          enum: [draft, published]
+          default: draft
+        isFeatured:
+          type: boolean
+          default: false
+        isBreaking:
+          type: boolean
+          default: false
+        readTime:
+          type: integer
+
+    ArticleUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        category:
+          type: string
+        author:
+          type: string
+        imageUrl:
+          type: string
+        status:
+          type: string
+          enum: [draft, published]
+        isFeatured:
+          type: boolean
+        isBreaking:
+          type: boolean
+        readTime:
+          type: integer
+
+    ArticleStats:
+      type: object
+      required:
+        - totalArticles
+        - publishedArticles
+        - draftArticles
+        - totalViews
+        - breakingCount
+        - featuredCount
+        - categoryBreakdown
+      properties:
+        totalArticles:
+          type: integer
+        publishedArticles:
+          type: integer
+        draftArticles:
+          type: integer
+        totalViews:
+          type: integer
+        breakingCount:
+          type: integer
+        featuredCount:
+          type: integer
+        categoryBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryCount"
+
+    CategoryCount:
+      type: object
+      required:
+        - category
+        - count
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+
+    ViewCount:
+      type: object
+      required:
+        - views
+      properties:
+        views:
+          type: integer
+
+    DeleteResult:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+
+    Category:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - articleCount
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        articleCount:
+          type: integer
+
+    Comment:
+      type: object
+      required:
+        - id
+        - articleId
+        - authorName
+        - content
+        - createdAt
+        - approved
+      properties:
+        id:
+          type: integer
+        articleId:
+          type: integer
+        authorName:
+          type: string
+        authorEmail:
+          type: ["string", "null"]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        approved:
+          type: boolean
+
+    CommentInput:
+      type: object
+      required:
+        - authorName
+        - content
+      properties:
+        authorName:
+          type: string
+          minLength: 1
+        authorEmail:
+          type: string
+        content:
+          type: string
+          minLength: 1
+
+    NewsletterInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+
+    SubscribeResult:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    TipInput:
+      type: object
+      required:
+        - tipContent
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        tipContent:
+          type: string
+          minLength: 10
+
+    TipResult:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    UploadInput:
+      type: object
+      required:
+        - imageUrl
+      properties:
+        imageUrl:
+          type: string
+
+    UploadResult:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
