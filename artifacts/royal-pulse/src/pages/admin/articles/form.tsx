@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ImageCropper from '@/components/ui/ImageCropper';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { withAuth } from '@/components/layout/withAuth';
 import { 
@@ -58,6 +59,9 @@ function ArticleForm() {
       enabled: isEditing
     }
   });
+
+  const [rawImageSrc, setRawImageSrc] = useState<string | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
 
   const createMutation = useCreateArticle();
   const updateMutation = useUpdateArticle();
@@ -134,7 +138,7 @@ function ArticleForm() {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -143,10 +147,22 @@ function ArticleForm() {
       return;
     }
 
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setRawImageSrc(reader.result as string);
+      setShowCropper(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCropDone = async (croppedBlob: Blob) => {
+    setShowCropper(false);
+    setRawImageSrc(null);
+
     const toastId = toast.loading('Uploading image to cloud...');
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', croppedBlob, 'article-image.jpg');
       formData.append('upload_preset', 'royal_pulse_unsigned');
       formData.append('folder', 'royal-pulse');
 
@@ -165,6 +181,11 @@ function ArticleForm() {
     }
   };
 
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setRawImageSrc(null);
+  };
+
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   if (isEditing && isLoadingArticle) {
@@ -179,6 +200,14 @@ function ArticleForm() {
 
   return (
     <AdminLayout>
+      {showCropper && rawImageSrc && (
+        <ImageCropper
+          imageSrc={rawImageSrc}
+          onCropDone={handleCropDone}
+          onCancel={handleCropCancel}
+          aspect={16 / 9}
+        />
+      )}
       <div className="max-w-5xl mx-auto pb-20">
         <div className="flex items-center gap-4 mb-8">
           <Link href="/admin/articles" className="p-2 bg-zinc-900 rounded-md text-zinc-400 hover:text-white transition-colors">
