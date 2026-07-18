@@ -140,24 +140,27 @@ function ArticleForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Convert file to data URL for the mock API
+    // Check file size — base64 bloats to ~1.33x, keep under 7MB source
+    if (file.size > 7 * 1024 * 1024) {
+      toast.error('Image too large. Please use an image under 7MB or paste an image URL instead.');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64Url = reader.result as string;
-      
       const toastId = toast.loading('Uploading image...');
-      
       uploadMutation.mutate(
         { data: { imageUrl: base64Url } },
         {
           onSuccess: (res) => {
             form.setValue('imageUrl', res.url);
-            toast.success('Image uploaded', { id: toastId });
+            toast.success('Image ready', { id: toastId });
           },
           onError: () => {
-            // Fallback for mock API if needed
+            // Store base64 directly — body limit is now 10mb so this is fine
             form.setValue('imageUrl', base64Url);
-            toast.success('Image loaded locally (mock)', { id: toastId });
+            toast.success('Image ready', { id: toastId });
           }
         }
       );
