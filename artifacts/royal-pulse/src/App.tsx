@@ -13,6 +13,7 @@ import AdvertisePage from './pages/advertise';
 import PrivacyPage from './pages/privacy';
 import TipsPage from './pages/tips';
 import AdminLogin from './pages/admin/login';
+import ForgotPassword from './pages/admin/forgot';
 import AdminDashboard from './pages/admin/dashboard';
 import AdminArticlesPage from './pages/admin/articles/index';
 import ArticleForm from './pages/admin/articles/form';
@@ -35,6 +36,7 @@ function Router() {
       
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/forgot" component={ForgotPassword} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/articles" component={AdminArticlesPage} />
       <Route path="/admin/articles/new" component={ArticleForm} />

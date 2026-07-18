@@ -122,6 +122,14 @@ export default function AdminLogin() {
             >
               Authenticate
             </button>
+            <div className="text-center">
+              <a
+                href="/admin/forgot"
+                className="text-zinc-500 text-sm hover:text-zinc-300 transition-colors"
+              >
+                Forgot password?
+              </a>
+            </div>
           </form>
         )}
       </div>
