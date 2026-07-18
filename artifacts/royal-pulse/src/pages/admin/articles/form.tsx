@@ -5,7 +5,6 @@ import {
   useCreateArticle, 
   useUpdateArticle, 
   useGetArticleBySlug,
-  useUploadImage
 } from '@workspace/api-client-react';
 import { useLocation, useParams } from 'wouter';
 import { useForm } from 'react-hook-form';
@@ -62,7 +61,6 @@ function ArticleForm() {
 
   const createMutation = useCreateArticle();
   const updateMutation = useUpdateArticle();
-  const uploadMutation = useUploadImage();
 
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleSchema),
@@ -136,36 +134,35 @@ function ArticleForm() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file size — base64 bloats to ~1.33x, keep under 7MB source
-    if (file.size > 7 * 1024 * 1024) {
-      toast.error('Image too large. Please use an image under 7MB or paste an image URL instead.');
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image too large. Max size is 10MB.');
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64Url = reader.result as string;
-      const toastId = toast.loading('Uploading image...');
-      uploadMutation.mutate(
-        { data: { imageUrl: base64Url } },
-        {
-          onSuccess: (res) => {
-            form.setValue('imageUrl', res.url);
-            toast.success('Image ready', { id: toastId });
-          },
-          onError: () => {
-            // Store base64 directly — body limit is now 10mb so this is fine
-            form.setValue('imageUrl', base64Url);
-            toast.success('Image ready', { id: toastId });
-          }
-        }
-      );
-    };
-    reader.readAsDataURL(file);
+    const toastId = toast.loading('Uploading image to cloud...');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'royal_pulse_unsigned');
+      formData.append('folder', 'royal-pulse');
+
+      const res = await fetch('https://api.cloudinary.com/v1_1/nggd6ukl/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+
+      const data = await res.json();
+      form.setValue('imageUrl', data.secure_url);
+      toast.success('Image uploaded successfully! ✅', { id: toastId });
+    } catch {
+      toast.error('Image upload failed. Please paste an image URL instead.', { id: toastId });
+    }
   };
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
