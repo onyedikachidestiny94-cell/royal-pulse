@@ -16,6 +16,7 @@ import AdminLogin from './pages/admin/login';
 import AdminDashboard from './pages/admin/dashboard';
 import AdminArticlesPage from './pages/admin/articles/index';
 import ArticleForm from './pages/admin/articles/form';
+import SettingsPage from './pages/admin/settings';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/admin/articles" component={AdminArticlesPage} />
       <Route path="/admin/articles/new" component={ArticleForm} />
       <Route path="/admin/articles/:id/edit" component={ArticleForm} />
+      <Route path="/admin/settings" component={SettingsPage} />
       
       <Route component={NotFound} />
     </Switch>

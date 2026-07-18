@@ -141,7 +141,7 @@ function AdminArticlesPage() {
                               <ExternalLink className="w-4 h-4" />
                             </Link>
                           )}
-                          <Link href={`/admin/articles/${article.id}/edit`} className="p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-md transition-colors" title="Edit">
+                          <Link href={`/admin/articles/${article.slug}/edit`} className="p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-md transition-colors" title="Edit">
                             <Edit className="w-4 h-4" />
                           </Link>
                           <button 

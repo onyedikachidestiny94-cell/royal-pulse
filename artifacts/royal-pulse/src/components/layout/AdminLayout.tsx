@@ -27,6 +27,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Articles', href: '/admin/articles', icon: FileText },
     { name: 'New Article', href: '/admin/articles/new', icon: PlusCircle },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
   return (
