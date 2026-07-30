@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Search, Menu, X } from 'lucide-react';
 import { BreakingNewsTicker } from '../BreakingNewsTicker';
+import { AdSenseAd } from '../AdSenseAd';
 import { useListCategories } from '@workspace/api-client-react';
 
 export function Navbar() {
@@ -20,6 +21,18 @@ export function Navbar() {
 
   return (
     <header className="w-full bg-background border-b border-border sticky top-0 z-50">
+      {/* Google AdSense Header Ad */}
+      <div className="w-full bg-gray-50 dark:bg-zinc-900 py-2 px-4 overflow-x-auto">
+        <div className="flex justify-center">
+          <AdSenseAd 
+            slot="1234567890" 
+            format="horizontal" 
+            responsive={true}
+            className="max-w-full"
+          />
+        </div>
+      </div>
+
       <BreakingNewsTicker />
       
       {/* Top Header */}
