@@ -1,0 +1,1 @@
+- [Credential handling](security-credentials.md) — keep third-party secrets out of uploaded files and source control.
