@@ -10,16 +10,16 @@ export function BreakingNewsTicker() {
   }
 
   return (
-    <div className="bg-primary text-primary-foreground py-2 overflow-hidden flex items-center border-b-2 border-black">
-      <div className="bg-black text-white font-bold px-4 py-1 text-sm uppercase tracking-wider whitespace-nowrap z-10 shrink-0 ml-4 hidden md:block">
+    <div className="flex items-center overflow-hidden border-b border-red-950 bg-primary py-2.5 text-primary-foreground">
+      <div className="z-10 ml-3 shrink-0 whitespace-nowrap bg-black px-3 py-1.5 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white md:ml-6 md:px-4 md:text-xs">
         Breaking News
       </div>
       <div className="flex flex-1 overflow-hidden whitespace-nowrap relative group">
-        <div className="animate-marquee flex items-center gap-8 pl-4 pr-12 min-w-full">
+        <div className="animate-marquee flex min-w-full items-center gap-8 pl-5 pr-12">
           {articles.map((article) => (
-            <Link key={article.id} href={`/article/${article.slug}`} className="hover:underline flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-white block animate-pulse" />
-              <span className="font-medium">{article.title}</span>
+            <Link key={article.id} href={`/article/${article.slug}`} className="flex items-center gap-2 text-xs font-medium hover:underline md:text-sm">
+              <span className="block h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+              <span>{article.title}</span>
             </Link>
           ))}
         </div>

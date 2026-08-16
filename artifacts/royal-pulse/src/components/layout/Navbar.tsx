@@ -1,106 +1,180 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, ArrowUpRight } from 'lucide-react';
 import { BreakingNewsTicker } from '../BreakingNewsTicker';
 import { useListCategories } from '@workspace/api-client-react';
 
+const requestedCategories = [
+  { name: 'Home', slug: '' },
+  { name: 'News', slug: 'news' },
+  { name: 'Breaking News', slug: 'breaking-news' },
+  { name: 'Politics', slug: 'politics' },
+  { name: 'Entertainment', slug: 'entertainment' },
+  { name: 'Sports', slug: 'sports' },
+  { name: 'Business', slug: 'business' },
+  { name: 'Technology', slug: 'technology' },
+  { name: 'World', slug: 'world' },
+  { name: 'Lifestyle', slug: 'lifestyle' },
+  { name: 'Metro', slug: 'metro' },
+  { name: 'Opinion', slug: 'opinion' },
+];
+
 export function Navbar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { data: categories } = useListCategories();
 
-  const navCategories = categories || [
-    { name: 'Politics', slug: 'politics', articleCount: 0 },
-    { name: 'Entertainment', slug: 'entertainment', articleCount: 0 },
-    { name: 'Sports', slug: 'sports', articleCount: 0 },
-    { name: 'Business', slug: 'business', articleCount: 0 },
-    { name: 'Technology', slug: 'technology', articleCount: 0 },
-    { name: 'World', slug: 'world', articleCount: 0 },
-  ];
+  const navCategories = useMemo(() => {
+    const dynamicNames = new Set((categories || []).map((category) => category.slug));
+    return requestedCategories.map((category) => {
+      const dynamicCategory = categories?.find((item) => item.slug === category.slug);
+      return dynamicCategory
+        ? { ...category, name: dynamicCategory.name }
+        : category;
+    }).filter((category, index, all) => (
+      all.findIndex((item) => item.slug === category.slug) === index ||
+      dynamicNames.has(category.slug)
+    ));
+  }, [categories]);
+
+  const isActive = (slug: string) => (
+    slug === '' ? location === '/' : location === `/category/${slug}`
+  );
+
+  const submitSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) {
+      setLocation('/search');
+      return;
+    }
+    setLocation(`/search?q=${encodeURIComponent(query)}`);
+    setIsSearchOpen(false);
+    setSearchQuery('');
+  };
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <header className="w-full bg-background border-b border-border sticky top-0 z-50">
-      <BreakingNewsTicker />
-      
-      {/* Top Header */}
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-md">
+      {/* Main masthead */}
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex flex-col items-start cursor-pointer group">
-            <span className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+        <div className="relative flex h-[4.5rem] items-center justify-between md:h-24">
+          <button
+            type="button"
+            aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+            onClick={() => setIsSearchOpen((open) => !open)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-700 transition-colors hover:border-primary hover:text-primary md:absolute md:left-6 md:top-1/2 md:-translate-y-1/2"
+          >
+            {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+          </button>
+
+          <Link
+            href="/"
+            aria-label="Royal Pulse home"
+            className="absolute left-1/2 -translate-x-1/2 text-center"
+          >
+            <span className="block font-serif text-[1.85rem] font-bold leading-none tracking-[-0.04em] text-zinc-950 transition-colors hover:text-primary md:text-5xl">
               Royal Pulse
+            </span>
+            <span className="mt-1 hidden text-[0.58rem] font-bold uppercase tracking-[0.28em] text-primary md:block">
+              Your trusted source for real stories
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
-            <div className="text-sm font-medium text-muted-foreground">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden text-right md:block">
+              <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary">Enugu, Nigeria</p>
+              <p className="mt-1 text-xs font-medium text-zinc-500">
+                {new Date().toLocaleDateString('en-NG', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
             </div>
-            <Link href="/search" className="text-foreground hover:text-primary transition-colors p-2">
-              <Search className="w-5 h-5" />
-            </Link>
+            <button
+              type="button"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-700 transition-colors hover:border-primary hover:text-primary md:hidden"
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
-
-          <button 
-            className="md:hidden p-2 text-foreground hover:text-primary"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
+
+        {isSearchOpen && (
+          <form onSubmit={submitSearch} className="border-t border-zinc-100 py-3 md:py-4">
+            <div className="flex items-center gap-3 rounded-lg border border-zinc-300 bg-zinc-50 px-3 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+              <Search className="h-5 w-5 shrink-0 text-primary" />
+              <input
+                autoFocus
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search headlines, topics, categories or keywords..."
+                className="min-w-0 flex-1 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 md:text-base"
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-md bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-red-700"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
-      {/* Main Navigation (Desktop) */}
-      <nav className="hidden md:block bg-black text-white w-full border-t border-b-4 border-primary">
-        <div className="container mx-auto px-4 md:px-6">
-          <ul className="flex items-center space-x-1 overflow-x-auto font-medium text-sm">
-            <li>
-              <Link href="/" className={`px-4 py-4 block hover:text-primary hover:bg-zinc-900 transition-colors ${location === '/' ? 'text-primary border-b-2 border-primary' : ''}`}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/breaking-news" className={`px-4 py-4 block hover:text-primary hover:bg-zinc-900 transition-colors ${location === '/category/breaking-news' ? 'text-primary border-b-2 border-primary' : ''}`}>
-                Breaking News
-              </Link>
-            </li>
-            {navCategories.map((cat) => (
-              <li key={cat.slug}>
-                <Link href={`/category/${cat.slug}`} className={`px-4 py-4 block hover:text-primary hover:bg-zinc-900 transition-colors ${location === `/category/${cat.slug}` ? 'text-primary border-b-2 border-primary' : ''}`}>
-                  {cat.name}
-                </Link>
-              </li>
-            ))}
+      {/* Always-visible newspaper category rail */}
+      <nav aria-label="News categories" className="border-y border-zinc-200 bg-zinc-950 text-white">
+        <div className="container mx-auto px-0 md:px-6">
+          <ul className="flex snap-x snap-mandatory items-center overflow-x-auto overscroll-x-contain px-3 scrollbar-none md:justify-center md:overflow-visible">
+            {navCategories.map((category) => {
+              const href = category.slug ? `/category/${category.slug}` : '/';
+              return (
+                <li key={category.slug || 'home'} className="shrink-0 snap-start">
+                  <Link
+                    href={href}
+                    className={`relative block whitespace-nowrap px-3.5 py-3 text-[0.7rem] font-bold uppercase tracking-[0.08em] transition-colors md:px-4 md:py-3.5 md:text-xs ${
+                      isActive(category.slug)
+                        ? 'text-white after:absolute after:bottom-0 after:left-3 after:right-3 after:h-1 after:bg-primary md:after:left-4 md:after:right-4'
+                        : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                    }`}
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Breaking news follows the category rail */}
+      <BreakingNewsTicker />
+
+      {/* Secondary mobile menu remains available for utility links */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-black text-white w-full border-t-2 border-primary">
-          <ul className="flex flex-col py-2 font-medium">
-            <li>
-              <Link href="/" className="block px-6 py-3 hover:bg-zinc-900 hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/breaking-news" className="block px-6 py-3 hover:bg-zinc-900 hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                Breaking News
-              </Link>
-            </li>
-            {navCategories.map((cat) => (
-              <li key={cat.slug}>
-                <Link href={`/category/${cat.slug}`} className="block px-6 py-3 hover:bg-zinc-900 hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                  {cat.name}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link href="/search" className="block px-6 py-3 hover:bg-zinc-900 hover:text-primary border-t border-zinc-800 mt-2" onClick={() => setIsMobileMenuOpen(false)}>
-                Search
-              </Link>
-            </li>
-          </ul>
+        <div className="border-b-2 border-primary bg-zinc-950 text-white md:hidden">
+          <div className="container mx-auto grid grid-cols-2 gap-2 px-4 py-3">
+            <Link href="/about" onClick={closeMobileMenu} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+              About Royal Pulse <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <Link href="/contact" onClick={closeMobileMenu} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+              Contact <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <Link href="/advertise" onClick={closeMobileMenu} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+              Advertise <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <Link href="/tips" onClick={closeMobileMenu} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+              Send a tip <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       )}
     </header>

@@ -20,7 +20,8 @@ router.get("/search", async (req, res): Promise<void> => {
     or(
       ilike(articlesTable.title, `%${q}%`),
       ilike(articlesTable.excerpt, `%${q}%`),
-      ilike(articlesTable.content, `%${q}%`)
+      ilike(articlesTable.content, `%${q}%`),
+      ilike(articlesTable.category, `%${q}%`)
     )
   );
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { useSearchArticles } from '@workspace/api-client-react';
 import { ArticleCard } from '@/components/ArticleCard';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function SearchPage() {
@@ -37,9 +37,20 @@ export default function SearchPage() {
 
   return (
     <Layout>
-      <div className="bg-zinc-100 py-12 border-b border-border">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <h1 className="font-serif text-4xl font-bold mb-6">Search Royal Pulse</h1>
+      <div className="border-b border-border bg-zinc-100 py-10 md:py-12">
+        <div className="container mx-auto max-w-4xl px-4 text-center">
+          <div className="mb-6 flex items-center justify-between">
+            <div className="w-10" />
+            <h1 className="font-serif text-3xl font-bold md:text-4xl">Search Royal Pulse</h1>
+            <button
+              type="button"
+              aria-label="Close search and return home"
+              onClick={() => setLocation('/')}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 text-zinc-600 transition-colors hover:border-primary hover:text-primary"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
           <form onSubmit={handleSearch} className="flex max-w-2xl mx-auto shadow-xl">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
