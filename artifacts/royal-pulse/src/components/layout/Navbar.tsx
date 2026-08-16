@@ -74,13 +74,20 @@ export function Navbar() {
           <Link
             href="/"
             aria-label="Royal Pulse home"
-            className="absolute left-1/2 -translate-x-1/2 text-center"
+            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5 text-center md:gap-3.5"
           >
-            <span className="block font-serif text-[1.85rem] font-bold leading-none tracking-[-0.04em] text-zinc-950 transition-colors hover:text-primary md:text-5xl">
-              Royal Pulse
-            </span>
-            <span className="mt-1 hidden text-[0.58rem] font-bold uppercase tracking-[0.28em] text-primary md:block">
-              Your trusted source for real stories
+            <img
+              src="/royal-pulse-logo.jpeg"
+              alt="Royal Pulse logo"
+              className="h-10 w-10 rounded-lg border border-zinc-800 object-cover shadow-sm md:h-16 md:w-16"
+            />
+            <span className="whitespace-nowrap text-left">
+              <span className="block font-serif text-[1.65rem] font-bold leading-none tracking-[-0.04em] text-zinc-950 transition-colors hover:text-primary md:text-5xl">
+                Royal Pulse
+              </span>
+              <span className="mt-1 hidden text-[0.58rem] font-bold uppercase tracking-[0.28em] text-primary md:block">
+                Your trusted source for real stories
+              </span>
             </span>
           </Link>
 
