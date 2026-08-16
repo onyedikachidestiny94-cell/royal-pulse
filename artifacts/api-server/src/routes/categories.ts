@@ -5,13 +5,18 @@ import { db, articlesTable } from "@workspace/db";
 const router = Router();
 
 const CATEGORIES = [
-  { id: 1, name: "Breaking News", slug: "breaking-news" },
-  { id: 2, name: "Politics", slug: "politics" },
-  { id: 3, name: "Entertainment", slug: "entertainment" },
-  { id: 4, name: "Sports", slug: "sports" },
-  { id: 5, name: "Business", slug: "business" },
-  { id: 6, name: "Technology", slug: "technology" },
-  { id: 7, name: "World", slug: "world" },
+  { id: 1, name: "News", slug: "news" },
+  { id: 2, name: "Breaking News", slug: "breaking-news" },
+  { id: 3, name: "Politics", slug: "politics" },
+  { id: 4, name: "Entertainment", slug: "entertainment" },
+  { id: 5, name: "Sports", slug: "sports" },
+  { id: 6, name: "Business", slug: "business" },
+  { id: 7, name: "Technology", slug: "technology" },
+  { id: 8, name: "World", slug: "world" },
+  { id: 9, name: "Lifestyle", slug: "lifestyle" },
+  { id: 10, name: "Metro", slug: "metro" },
+  { id: 11, name: "Opinion", slug: "opinion" },
+  { id: 12, name: "Local", slug: "local" },
 ];
 
 // GET /categories

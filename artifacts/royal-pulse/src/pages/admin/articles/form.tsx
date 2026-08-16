@@ -40,7 +40,18 @@ const articleSchema = z.object({
 type ArticleFormValues = z.infer<typeof articleSchema>;
 
 const categories = [
-  'politics', 'entertainment', 'sports', 'business', 'technology', 'world', 'local'
+  { value: 'news', label: 'News' },
+  { value: 'breaking-news', label: 'Breaking News' },
+  { value: 'politics', label: 'Politics' },
+  { value: 'entertainment', label: 'Entertainment' },
+  { value: 'sports', label: 'Sports' },
+  { value: 'business', label: 'Business' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'world', label: 'World' },
+  { value: 'lifestyle', label: 'Lifestyle' },
+  { value: 'metro', label: 'Metro' },
+  { value: 'opinion', label: 'Opinion' },
+  { value: 'local', label: 'Local' },
 ];
 
 function ArticleForm() {
@@ -371,7 +382,11 @@ function ArticleForm() {
                             {...field}
                             className="w-full bg-zinc-900 border border-zinc-700 text-white h-10 px-3 rounded-md focus:outline-none focus:border-primary capitalize"
                           >
-                            {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                            {categories.map(category => (
+                              <option key={category.value} value={category.value}>
+                                {category.label}
+                              </option>
+                            ))}
                           </select>
                         </FormControl>
                       </FormItem>
