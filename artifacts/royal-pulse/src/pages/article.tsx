@@ -19,12 +19,14 @@ export default function ArticlePage() {
 
   const { data: article, isLoading, error } = useGetArticleBySlug(slug || '', {
     query: {
+      queryKey: ['article-by-slug', slug],
       enabled: !!slug
     }
   });
 
   const { data: comments } = useListComments(article?.id || 0, {
     query: {
+      queryKey: ['comments', article?.id],
       enabled: !!article?.id
     }
   });

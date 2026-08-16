@@ -20,6 +20,7 @@ export default function SearchPage() {
     limit: 12
   }, {
     query: {
+      queryKey: ['search-articles', activeQuery, page],
       enabled: activeQuery.length > 0
     }
   });

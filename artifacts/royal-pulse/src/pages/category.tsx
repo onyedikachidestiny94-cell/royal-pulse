@@ -16,6 +16,7 @@ export default function CategoryPage() {
     limit: 12
   }, {
     query: {
+      queryKey: ['articles-by-category', slug, page],
       enabled: !!slug
     }
   });

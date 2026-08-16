@@ -56,6 +56,7 @@ function ArticleForm() {
   
   const { data: existingArticle, isLoading: isLoadingArticle } = useGetArticleBySlug(slugToFetch as string, {
     query: {
+      queryKey: ['article-by-slug', slugToFetch],
       enabled: isEditing
     }
   });
@@ -116,7 +117,7 @@ function ArticleForm() {
             setLocation('/admin/articles');
           },
           onError: (err) => {
-            toast.error('Failed to update article');
+            toast.error(err instanceof Error ? err.message : 'Failed to update article');
             console.error(err);
           }
         }
@@ -130,7 +131,7 @@ function ArticleForm() {
             setLocation('/admin/articles');
           },
           onError: (err) => {
-            toast.error('Failed to create article');
+            toast.error(err instanceof Error ? err.message : 'Failed to create article');
             console.error(err);
           }
         }
