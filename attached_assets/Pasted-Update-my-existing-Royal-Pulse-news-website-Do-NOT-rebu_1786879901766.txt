@@ -1,0 +1,114 @@
+Update my existing Royal Pulse news website. Do NOT rebuild the website from scratch and do NOT remove any existing articles, features, data, or functionality. Modify the existing header/navigation to make it look more like a modern professional Nigerian news website.
+
+HEADER / TOP AREA
+
+Redesign the top section of the website as follows:
+
+* Keep the Royal Pulse brand/logo.
+* Place the Royal Pulse logo prominently in the header, preferably centered on mobile and positioned appropriately on desktop.
+* Add a search icon/search bar at the top-left area of the header.
+* When the search icon is clicked, open a clean search input where visitors can search news articles by headline, category, keywords, or content.
+* Keep the hamburger menu icon on the right side on mobile.
+* Make the header sticky while scrolling if this can be done without hurting performance.
+
+CATEGORY NAVIGATION
+
+Create a dedicated category navigation bar directly underneath the main header.
+
+The categories should be displayed horizontally like a professional newspaper website.
+
+Use categories such as:
+
+* Home
+* News
+* Politics
+* Entertainment
+* Sports
+* Business
+* Technology
+* World
+* Lifestyle
+* Metro
+* Opinion
+
+Important mobile behavior:
+
+* The category bar must be horizontally scrollable/swipeable on phones.
+* Do NOT hide the categories inside the hamburger menu.
+* Keep the category names on one horizontal line.
+* Add smooth horizontal scrolling.
+* Make the currently selected category visually obvious.
+* The navigation should remain clean and compact so it doesn’t take too much screen space.
+
+On desktop, display the categories across the page in a clean navigation row.
+
+BREAKING NEWS
+
+Keep the existing breaking-news ticker, but position it below the category navigation bar.
+
+Make the ticker:
+
+* Red and visually prominent.
+* Horizontally scrolling.
+* Easy to update from the existing article/news data.
+* Responsive on mobile and desktop.
+
+HOMEPAGE CONTENT
+
+After the header, category navigation, and breaking-news ticker, keep the existing homepage content.
+
+The order should be:
+
+Header → Category Navigation → Breaking News Ticker → Featured Story → Latest/News Stories
+
+Do not remove my existing featured article or news articles.
+
+SEARCH FUNCTION
+
+Make the search function actually work.
+
+When a visitor searches:
+
+* Search article titles.
+* Search article descriptions/content.
+* Search categories.
+* Display matching articles.
+* Show a clear “No results found” message when there are no matches.
+* Include a close button so the user can easily return to the homepage.
+
+RESPONSIVE DESIGN
+
+The entire header and navigation must work perfectly on:
+
+* iPhone/mobile
+* Android phones
+* Tablets
+* Desktop computers
+
+On mobile, avoid:
+
+* Text being cut off.
+* Categories wrapping onto multiple lines.
+* The search bar covering the logo.
+* The hamburger menu overlapping content.
+* Excessive header height.
+
+DESIGN STYLE
+
+Keep the Royal Pulse identity and make it look like a professional modern African/Nigerian digital newspaper.
+
+Use:
+
+* Clean typography.
+* Strong headline typography.
+* Plenty of spacing.
+* Professional borders/dividers.
+* Smooth hover and touch effects.
+* Responsive layout.
+* Fast loading.
+
+Do NOT copy Punch’s branding, logo, colors, text, or exact design. Use the screenshot only as a reference for the general positioning and structure of the header and category navigation.
+
+Most importantly, preserve everything that already works on my Royal Pulse website and only improve/update the header, search, category navigation, and positioning.
+
+After making the changes, test the website on mobile and desktop and fix any layout or responsiveness problems you find.
