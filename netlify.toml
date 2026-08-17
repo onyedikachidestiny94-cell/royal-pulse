@@ -1,6 +1,6 @@
 [build]
   base = "."
-  command = "pnpm run typecheck:libs && pnpm --filter @workspace/royal-pulse run build"
+  command = "node scripts/generate-sitemap.mjs && pnpm run typecheck:libs && pnpm --filter @workspace/royal-pulse run build"
   publish = "artifacts/royal-pulse/dist/public"
 
 [[redirects]]
