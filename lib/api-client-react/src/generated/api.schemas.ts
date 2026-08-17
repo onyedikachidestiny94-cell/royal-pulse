@@ -83,8 +83,7 @@ export interface ArticleInput {
   title: string;
   /** @minLength 1 */
   content: string;
-  /** @minLength 1 */
-  excerpt: string;
+  excerpt?: string;
   category: string;
   author: string;
   imageUrl?: string;

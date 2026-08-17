@@ -116,7 +116,7 @@ router.post("/articles", async (req, res): Promise<void> => {
       title: data.title,
       slug,
       content: data.content,
-      excerpt: data.excerpt,
+      excerpt: data.excerpt ?? "",
       category: data.category,
       author: data.author,
       imageUrl: data.imageUrl,

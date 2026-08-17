@@ -126,14 +126,26 @@ export default function ArticlePage() {
             )}
           </div>
           
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 text-black">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-0 text-black">
             {article.title}
           </h1>
-          
-          <p className="text-xl md:text-2xl text-zinc-600 font-serif italic leading-relaxed mb-8 border-l-4 border-primary pl-6 py-1">
-            {article.excerpt}
-          </p>
-          
+        </header>
+
+        {/* Featured Image */}
+        {article.imageUrl && (
+          <div className="container mx-auto px-4 max-w-5xl mb-12">
+            <div className="aspect-video w-full bg-zinc-100 relative">
+              <img
+                src={article.imageUrl}
+                alt={article.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Article Metadata and Sharing */}
+        <div className="container mx-auto px-4 max-w-4xl mb-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between py-6 border-y border-zinc-200 gap-4">
             <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-zinc-500">
               <div className="flex items-center gap-2 text-black">
@@ -177,20 +189,7 @@ export default function ArticlePage() {
               </button>
             </div>
           </div>
-        </header>
-
-        {/* Featured Image */}
-        {article.imageUrl && (
-          <div className="container mx-auto px-4 max-w-5xl mb-12">
-            <div className="aspect-video w-full bg-zinc-100 relative">
-              <img 
-                src={article.imageUrl} 
-                alt={article.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Article Body */}
         <div className="container mx-auto px-4 max-w-3xl mb-16">

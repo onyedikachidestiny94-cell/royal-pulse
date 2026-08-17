@@ -26,7 +26,6 @@ import { Link } from 'wouter';
 
 const articleSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
-  excerpt: z.string().min(10, 'Excerpt must be at least 10 characters'),
   content: z.string().min(50, 'Content must be at least 50 characters'),
   category: z.string().min(2, 'Please select a category'),
   author: z.string().min(2, 'Author name is required'),
@@ -82,7 +81,6 @@ function ArticleForm() {
     resolver: zodResolver(articleSchema),
     defaultValues: {
       title: '',
-      excerpt: '',
       content: '',
       category: 'politics',
       author: 'Royal Pulse Staff',
@@ -100,7 +98,6 @@ function ArticleForm() {
       initRef.current = true;
       form.reset({
         title: existingArticle.title,
-        excerpt: existingArticle.excerpt,
         content: existingArticle.content,
         category: existingArticle.category,
         author: existingArticle.author,
@@ -252,24 +249,6 @@ function ArticleForm() {
                           {...field} 
                           className="w-full bg-zinc-900 border border-zinc-700 text-white h-12 px-4 rounded-md font-serif text-lg focus:outline-none focus:border-primary"
                           placeholder="Enter article headline..."
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-400" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="excerpt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-zinc-300">Excerpt / Summary</FormLabel>
-                      <FormControl>
-                        <textarea 
-                          {...field} 
-                          className="w-full bg-zinc-900 border border-zinc-700 text-white p-4 rounded-md focus:outline-none focus:border-primary resize-none h-24"
-                          placeholder="A brief summary for cards and meta description..."
                         />
                       </FormControl>
                       <FormMessage className="text-red-400" />

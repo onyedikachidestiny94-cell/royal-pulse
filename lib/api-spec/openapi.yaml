@@ -552,7 +552,6 @@ components:
       required:
         - title
         - content
-        - excerpt
         - category
         - author
       properties:
@@ -564,7 +563,6 @@ components:
           minLength: 1
         excerpt:
           type: string
-          minLength: 1
         category:
           type: string
         author:

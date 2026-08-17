@@ -57,7 +57,6 @@ export const ListArticlesResponse = zod.object({
  */
 
 
-
 export const createArticleBodyStatusDefault = `draft`;
 export const createArticleBodyIsFeaturedDefault = false;
 export const createArticleBodyIsBreakingDefault = false;
@@ -65,7 +64,7 @@ export const createArticleBodyIsBreakingDefault = false;
 export const CreateArticleBody = zod.object({
   "title": zod.string().min(1),
   "content": zod.string().min(1),
-  "excerpt": zod.string().min(1),
+  "excerpt": zod.string().optional(),
   "category": zod.string(),
   "author": zod.string(),
   "imageUrl": zod.string().optional(),
