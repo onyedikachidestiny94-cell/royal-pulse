@@ -10,14 +10,26 @@ import {
 } from '@workspace/api-client-react';
 import { Link } from 'wouter';
 
+
+const FALLBACK_ARTICLES = [
+  { id: -1, title: "Enugu Set for Major Development as New Projects Take Shape", slug: "enugu-major-development-projects", excerpt: "New projects and public investments are reshaping opportunities across Enugu and the wider Southeast.", category: "News", author: "Royal Pulse Desk", imageUrl: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1200", publishedAt: "2026-08-17T10:00:00.000Z", views: 0, status: "published", isFeatured: true, isBreaking: false, readTime: 4 },
+  { id: -2, title: "Burna Boy Announces Coal City Nights Concert in Enugu", slug: "burna-boy-coal-city-nights-enugu", excerpt: "Burna Boy announces a major Enugu concert at the Nnamdi Azikiwe Stadium this December.", category: "Entertainment", author: "Adaeze Nwosu", imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200", publishedAt: "2026-08-16T10:00:00.000Z", views: 0, status: "published", isFeatured: false, isBreaking: false, readTime: 3 },
+  { id: -3, title: "CBN Raises Interest Rate to 27.5% to Combat Inflation", slug: "cbn-raises-interest-rate-27-5-percent", excerpt: "The Central Bank raises interest rates as it battles persistent inflation and works to restore price stability.", category: "Business", author: "Kelechi Ugwu", imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200", publishedAt: "2026-08-15T10:00:00.000Z", views: 0, status: "published", isFeatured: false, isBreaking: false, readTime: 4 },
+];
+
 export default function HomePage() {
   const { data: featured, isLoading: featuredLoading } = useGetFeaturedArticles();
   const { data: trending, isLoading: trendingLoading } = useGetTrendingArticles();
   const { data: latest, isLoading: latestLoading } = useListArticles({ limit: 6 });
   const { data: popular, isLoading: popularLoading } = useGetPopularArticles();
 
-  const heroArticle = featured?.[0];
-  const subFeatured = featured?.slice(1, 4) || [];
+  const featuredArticles = featured?.length ? featured : FALLBACK_ARTICLES.slice(0, 3);
+  const latestArticles = latest?.articles?.length ? latest.articles : FALLBACK_ARTICLES;
+  const popularArticles = popular?.length ? popular : FALLBACK_ARTICLES;
+  const trendingArticles = trending?.length ? trending : FALLBACK_ARTICLES;
+
+  const heroArticle = featuredArticles[0];
+  const subFeatured = featuredArticles.slice(1, 4);
 
   return (
     <Layout>
@@ -77,7 +89,7 @@ export default function HomePage() {
                   Array(6).fill(0).map((_, i) => (
                     <div key={i} className="h-80 bg-zinc-100 animate-pulse" />
                   ))
-                ) : latest?.articles.map((article) => (
+                ) : latestArticles.map((article) => (
                   <ArticleCard key={article.id} article={article} />
                 ))}
               </div>
@@ -92,7 +104,7 @@ export default function HomePage() {
                   Array(4).fill(0).map((_, i) => (
                     <div key={i} className="h-32 bg-zinc-100 animate-pulse" />
                   ))
-                ) : popular?.slice(0, 4).map((article) => (
+                ) : popularArticles.slice(0, 4).map((article) => (
                   <ArticleCard key={article.id} article={article} compact />
                 ))}
               </div>
