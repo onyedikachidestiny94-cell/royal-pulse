@@ -2,7 +2,7 @@ services:
   - type: web
     name: royal-pulse-api
     env: node
-    buildCommand: pnpm install --frozen-lockfile && pnpm run typecheck:libs && pnpm --filter @workspace/api-server run build
+    buildCommand: pnpm install --frozen-lockfile && pnpm run typecheck:libs && pnpm --filter @workspace/db run push && node lib/db/seed.mjs && pnpm --filter @workspace/api-server run build
     startCommand: pnpm --filter @workspace/api-server run start
     envVars:
       - key: NODE_ENV
